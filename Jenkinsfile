@@ -4,11 +4,20 @@ pipeline{
         PATH = "$PATH:/opt/apache-maven-3.8.2/bin"
     }
     stages{
-       stage('GetCode'){
-            steps{
-                git 'https://github.com/itraveena/sonarjenkins.git'
+        stage('GetCode') {
+            steps {
+                script {
+                    // Checkout the code
+                    def code = git 'https://github.com/itraveena/sonarjenkins.git'
+                    if (code == 0) {
+                        echo 'Code checkout successful!'
+                    } else {
+                        error 'Failed to checkout code!'
+                    }
+                }
             }
-         }        
+        }
+       
        stage('Build'){
             steps{
                 sh 'mvn clean package'
